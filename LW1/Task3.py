@@ -1,7 +1,6 @@
 import cv2
 
 cap = cv2.VideoCapture('video1.mp4', cv2.WINDOW_NORMAL)
-
 cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
 
 # изменяем размер окна
@@ -21,7 +20,7 @@ while cap.isOpened():
         # отображаем кадр в окне
         cv2.imshow('Video', lab)
 
-        # выход при нажатии клавиши esc
+        # выход при нажатии клавиши 'esc'
         if cv2.waitKey(1) & 0xFF == 27:
             break
     else:
