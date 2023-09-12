@@ -1,24 +1,23 @@
 import cv2
 
+# отображение видео в окне
 cap = cv2.VideoCapture('video1.mp4',cv2.WINDOW_NORMAL)
 cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
 
-# получаем размеры кадра
+# получение размеров кадра
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-# создаем объект VideoWriter для записи видео в файл
+# создание объект VideoWriter для записи видео в файл
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-out = cv2.VideoWriter('output.mov', fourcc, 30.0, (width, height))
+out = cv2.VideoWriter('output_1.mov', fourcc, 30.0, (width, height))
 
-# читаем видеофайл кадр за кадром и записываем его в другой файл
+# чтение видеофайла кадр за кадром и запись его в другой файл
 while cap.isOpened():
     ret, frame = cap.read()
     if ret:
-        # записываем кадр в файл
         out.write(frame)
-
-        # отображаем кадр в окне
+        # отображение кадра в окне
         cv2.imshow('Video', frame)
 
         # выход при нажатии клавиши 'esc'

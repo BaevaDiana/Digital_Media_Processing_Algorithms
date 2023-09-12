@@ -6,10 +6,10 @@ def readIPWriteTOFile():
     w = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     h = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video_writer = cv2.VideoWriter("output.mov", fourcc, 25, (w, h))
+    video_writer = cv2.VideoWriter("output_2.mov", fourcc, 25, (w, h))
     while (True):
         ok, img = video.read()
-        cv2.imshow('img', img)
+        cv2.imshow('Webcam video', img)
         video_writer.write(img)
         # выход при нажатии клавиши 'esc'
         if cv2.waitKey(1) & 0xFF == 27:

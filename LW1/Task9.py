@@ -14,6 +14,5 @@ while True:
         print("Ошибка чтения видео")
         break
 
-
 cap.release()
 cv2.destroyAllWindows()
