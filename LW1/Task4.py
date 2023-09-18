@@ -1,7 +1,7 @@
 import cv2
 
 # отображение видео в окне
-cap = cv2.VideoCapture('video1.mp4',cv2.WINDOW_NORMAL)
+cap = cv2.VideoCapture(0)
 cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
 
 # получение размеров кадра

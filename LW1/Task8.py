@@ -34,8 +34,8 @@ x2_2 = width // 2 + rect_height_2 // 2 # правый нижний угол по
 y2_2 = height // 2 + rect_width_2 // 2 # правый нижний угол по оси y
 
 # отрисовка
-cv2.rectangle(img, (x1_1, y1_1), (x2_1, y2_1), color, thickness)
-cv2.rectangle(img, (x1_2, y1_2), (x2_2, y2_2), color, thickness)
+cv2.rectangle(img, (x1_1-5, y1_1-3), (x2_1-5, y2_1-3), color, thickness)
+cv2.rectangle(img, (x1_2-5, y1_2-3), (x2_2-5, y2_2-3), color, thickness)
 
 # для размытия центра креста использую GaussianBlur
 
@@ -70,8 +70,8 @@ min_index = distances.index(min(distances))
 nearest_color = colors[min_index]
 
 #закрашивание креста ближайшим цветом
-cv2.rectangle(img, (x1_1, y1_1), (x2_1, y2_1), nearest_color, -1) # -1 означает заполнение всей области
-cv2.rectangle(img, (x1_2, y1_2), (x2_2, y2_2), nearest_color, -1)
+cv2.rectangle(img, (x1_1-5, y1_1-3), (x2_1-5, y2_1-3), nearest_color, -1) # -1 означает заполнение всей области
+cv2.rectangle(img, (x1_2-5, y1_2-3), (x2_2-5, y2_2-3), nearest_color, -1)
 
 cv2.imshow('Display window', img)
 cv2.waitKey(0)
