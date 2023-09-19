@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+# объект VideoCapture для подключения к IP-камере
 cap = cv2.VideoCapture(0)
 
 while True:
@@ -8,36 +9,32 @@ while True:
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # определение диапазона красного цвета в HSV
-    lower_red = np.array([0, 50, 50])
-    upper_red = np.array([10, 255, 255])
-    mask1 = cv2.inRange(hsv, lower_red, upper_red)
+    lower_red = np.array([0, 0, 100])  # минимальные значения оттенка, насыщенности и значения(яркости)
+    upper_red = np.array([100, 100, 255])  # максимальные значения оттенка, насыщенности и значения(яркости)
 
-    lower_red = np.array([170, 50, 50])
-    upper_red = np.array([180, 255, 255])
-    mask2 = cv2.inRange(hsv, lower_red, upper_red)
-
-    # объединение двух масок
-    mask = mask1 + mask2
+    # Маска - бинарное изображение, где пиксели, соответствующие заданному диапазону цвета, имеют значение 255 (белый), а остальные пиксели имеют значение 0 (черный).
+    mask = cv2.inRange(hsv, lower_red, upper_red)
 
     # применение маски на изображение
     res = cv2.bitwise_and(frame, frame, mask=mask)
 
-    # определение структурирующего элемента для морфологических преобразований
+    # структурирующий элемент(определяет размер и форму области)
     kernel = np.ones((5, 5), np.uint8)
 
-    # применение операции открытия на изображении
+    # применение операции открытия - позволяет удалить шумы и мелкие объекты на изображении(удаление нежелательных пикселей или деталей)
     opening = cv2.morphologyEx(res, cv2.MORPH_OPEN, kernel)
 
-    # применение операции закрытия на изображении
+    # применение операции закрытия - позволяет заполнить маленькие пробелы и разрывы в объектах на изображении
     closing = cv2.morphologyEx(res, cv2.MORPH_CLOSE, kernel)
 
-    # отображение результатов морфологических преобразований
     cv2.imshow('Opening', opening)
     cv2.imshow('Closing', closing)
 
+    # нажатие клавиши esc для выхода из цикла
     if cv2.waitKey(1) & 0xFF == 27:
         break
 
+# освобождение ресурсов окна
 cap.release()
 cv2.destroyAllWindows()
 
