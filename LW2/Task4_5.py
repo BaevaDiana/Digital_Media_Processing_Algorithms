@@ -38,7 +38,6 @@ while True:
             (c_x + (width // 8), c_y + (height // 8)),
             color, thickness)
 
-
     cv2.imshow('HSV_frame', hsv)
     cv2.imshow('Result_frame', frame)
 
