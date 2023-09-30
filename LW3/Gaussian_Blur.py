@@ -7,8 +7,8 @@ def main():
     # чтение изображения в черно-белом формате
     img = cv2.imread("pic2.jpg", cv2.IMREAD_GRAYSCALE)
 
-    standard_deviation = 100
-    kernel_size = 5
+    standard_deviation = 9
+    kernel_size = 11
     imgBlur_1 = AnotherGaussianBlur(img, kernel_size, standard_deviation)
     #cv2.imshow('Original_image', img)
     cv2.imshow(str(kernel_size) + 'x' + str(kernel_size) + ' and deviation ' + str(standard_deviation), imgBlur_1)
@@ -47,12 +47,12 @@ def AnotherGaussianBlur(img, kernel_size, standard_deviation):
             kernel[i, j] /= sum
     #print(kernel)
 
-    # применение операции свёртки
+    # применение операции свёртки к изображению
     imgBlur = Convolution(img, kernel)
     return imgBlur
 
 
-# реализация операции свёртки изображения
+# реализация операции свёртки
 def Convolution(img, kernel):
     kernel_size = len(kernel)
     imgBlur = img.copy()
