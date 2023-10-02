@@ -19,6 +19,7 @@ def main():
     # imgBlur_2 = AnotherGaussianBlur(img, kernel_size, standard_deviation)
     # cv2.imshow(str(kernel_size) + 'x' + str(kernel_size) + ' and deviation ' + str(standard_deviation), imgBlur_2)
 
+
     # Задание 5 - Реализация размытие Гаусса встроенным методом OpenCV
     imgBlur_CV2 = cv2.GaussianBlur(
         img, (kernel_size, kernel_size), standard_deviation)
