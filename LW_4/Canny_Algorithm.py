@@ -103,7 +103,7 @@ def main(path, standard_deviation, kernel_size):
         for j in range(img.shape[1]):
             img_gradient_to_print[i][j] = (float(matr_gradient[i][j]) / max_gradient) * 255
     cv2.imshow('img_gradient_to_print ' + str(i), img_gradient_to_print)
-    print('Матрица значений длин градиента')
+    print('Матрица значений длин градиента:')
     print(img_gradient_to_print)
 
     img_angles_to_print = img.copy()
@@ -111,7 +111,7 @@ def main(path, standard_deviation, kernel_size):
         for j in range(img.shape[1]):
             img_angles_to_print[i][j] = img_angles[i][j] / 7 * 255
     cv2.imshow('img_angles_to_print ' + str(i), img_angles_to_print)
-    print('Матрица значений углов градиента')
+    print('Матрица значений углов градиента:')
     print(img_angles_to_print)
 
     cv2.waitKey(0)
