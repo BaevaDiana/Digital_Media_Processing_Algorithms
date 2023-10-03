@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-
 # реализация операции свёртки
 def Convolution(img, kernel):
     kernel_size = len(kernel)
@@ -23,10 +22,9 @@ def Convolution(img, kernel):
             matr[i][j] = val
     return matr
 
-# схема округления угла
+# нахождение округления угла между вектором градиента и осью Х
 def get_angle_number(x, y):
     tg = y/x if x != 0 else 999
-
     if (x < 0):
         if (y < 0):
             if (tg > 2.414):
@@ -74,7 +72,7 @@ def main(path, standard_deviation, kernel_size, bound_path):
     Gx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
     Gy = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]
 
-    # применение оператора свёртки
+    # применение операции свёртки
     img_Gx = Convolution(img, Gx)
     img_Gy = Convolution(img, Gy)
 
@@ -89,7 +87,7 @@ def main(path, standard_deviation, kernel_size, bound_path):
         for j in range(img.shape[1]):
             matr_gradient[i][j] = np.sqrt(img_Gx[i][j] ** 2 + img_Gy[i][j] ** 2)
 
-    # нахождение округления угла между вектором градиента и осью Х
+    # нахождение матрицы значений углов градиента
     img_angles = img.copy()
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -176,11 +174,11 @@ def main(path, standard_deviation, kernel_size, bound_path):
                 # если значение градиента выше - верхней границы, то пиксель точно граница
                 elif (gradient > upper_bound):
                     double_filtration[i][j] = 255
-
     cv2.imshow('Double_filtration ' + str(i), double_filtration)
+
     cv2.waitKey(0)
 
 
-main('pic2.jpg',3,3, 3)
-#main('pic2.jpg', 6, 3, 6)
-#main('pic2.jpg', 100, 9, 15)
+main('pic2_small.jpg',3,3, 3)
+#main('pic2_small.jpg', 6, 5, 10)
+#main('pic2_small.jpg', 100, 9, 15)
