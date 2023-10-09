@@ -44,7 +44,7 @@ def main(kernel_size, standard_deviation,delta_tresh, min_area):
 
         # прохождение по списку контуров
         for contr in contors:
-            # поиск параметра для сравнения
+            # вычисление площади контура
             area = cv2.contourArea(contr)
             # если контур больше, чем наперед заданный параметр - было движение
             if area < min_area:
