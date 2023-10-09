@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 
 i = 0
 def main(kernel_size, standard_deviation,delta_tresh, min_area):
@@ -7,7 +6,7 @@ def main(kernel_size, standard_deviation,delta_tresh, min_area):
     i += 1
 
     # чтение видео из файла
-    video_source = cv2.VideoCapture('video_sources/motions.mov', cv2.CAP_ANY)
+    video_source = cv2.VideoCapture('video_sources/motion_1.mov', cv2.CAP_ANY)
     # подготовка первого кадра
     ret, frame = video_source.read()
     # перевод в чёрно-белый формат
@@ -15,7 +14,7 @@ def main(kernel_size, standard_deviation,delta_tresh, min_area):
     # применение размытия Гаусса
     img = cv2.GaussianBlur(img, (kernel_size, kernel_size), standard_deviation)
 
-    # подготовка записи
+    # подготовка записи файла
     # определение размера кадра при записи
     w = int(video_source.get(cv2.CAP_PROP_FRAME_WIDTH))
     h = int(video_source.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -26,6 +25,7 @@ def main(kernel_size, standard_deviation,delta_tresh, min_area):
 
     # цикл, завершающийся по завершению файла
     while True:
+        print('Выполняется обработка видео...')
         # копирование старого кадра
         old_img = img.copy()
         # чтение нового кадра, перевод в чёрно-белый формат и фильтр Гаусса
@@ -52,8 +52,34 @@ def main(kernel_size, standard_deviation,delta_tresh, min_area):
             # запись кадра в файл
             video_writer.write(frame)
     video_writer.release()
+    print('Обработка завершена.')
 
 kernel_size = 3
+standard_deviation = 50
+delta_tresh = 60
+min_area = 20
+main(kernel_size, standard_deviation,delta_tresh,min_area)
+
+# эксперименты с параметрами
+kernel_size = 3
+standard_deviation = 50
+delta_tresh = 40
+min_area = 5
+main(kernel_size, standard_deviation,delta_tresh,min_area)
+
+kernel_size = 5
+standard_deviation = 50
+delta_tresh = 70
+min_area = 30
+main(kernel_size, standard_deviation,delta_tresh,min_area)
+
+kernel_size = 5
+standard_deviation = 30
+delta_tresh = 50
+min_area = 15
+main(kernel_size, standard_deviation,delta_tresh,min_area)
+
+kernel_size = 5
 standard_deviation = 50
 delta_tresh = 60
 min_area = 20
