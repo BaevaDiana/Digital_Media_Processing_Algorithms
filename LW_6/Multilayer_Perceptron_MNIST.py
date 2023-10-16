@@ -38,7 +38,7 @@ model.add(Dropout(0.2))
 # добавление выходного слоя
 model.add(Dense(num_classes, activation='softmax'))
 
-# Компиляция модели и обучение ее на тренировочных данных
+# компиляция модели и обучение ее на тренировочных данных
 # настройка процесса обучения модели
 model.compile(loss='categorical_crossentropy',
               optimizer=RMSprop(),
