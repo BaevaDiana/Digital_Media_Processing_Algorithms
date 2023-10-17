@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 from keras.models import load_model
+import time
+
+# замер начала времени работы
+start_time = time.time()
 
 # загрузка модели получившейся ранее свёрточной нейронной сети
 model = load_model('./models/cnn_model.keras')
@@ -27,3 +31,6 @@ predicted_class = np.argmax(predictions)
 
 # вывод предсказанного класса(цифры)
 print(f"Предсказанная цифра: {predicted_class}")
+# подсчёт затраченного времени
+end_time = time.time()
+print('Затраченное время:', end_time - start_time)

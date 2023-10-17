@@ -1,6 +1,10 @@
 from keras.models import load_model
 import cv2
 import numpy as np
+import time
+
+# замер начала времени работы
+start_time = time.time()
 
 # загрузка модели получившегося ранее персептрона
 model = load_model("./models/multilayer_perceptron.keras")
@@ -27,4 +31,7 @@ predicted_class = np.argmax(predictions)
 
 # вывод предсказанного класса(цифры)
 print(f"Предсказанная цифра: {predicted_class}")
+# подсчёт затраченного времени
+end_time = time.time()
+print('Затраченное время:', end_time - start_time)
 
