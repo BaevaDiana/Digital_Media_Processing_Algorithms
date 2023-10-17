@@ -38,7 +38,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # # Добавление TensorBoard в модель
-# tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="C:/Users/Дианочка/PycharmProjects/DigitalMediaProcessingAlgorithms/LW_6/logs")
+# tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="C:/Users/Дианочка/PycharmProjects/DigitalMediaProcessingAlgorithms/LW_6/logs_1")
 
 # обучение модели на тренировочных данных
 history = model.fit(train_images, train_labels,

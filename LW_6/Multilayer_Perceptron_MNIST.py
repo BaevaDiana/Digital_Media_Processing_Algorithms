@@ -4,9 +4,14 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
+from keras.callbacks import TensorBoard
 import time
+from torch.utils.tensorboard import SummaryWriter
+import numpy as np
 
+# замер начала времени работы
 start_time = time.time()
+writer = SummaryWriter(log_dir='/LW_6/logs_1')
 
 # загрузка данных MNIST (первый кортеж - тренировочные изображения и метки, а второй - тестовые изображения и метки)
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -43,12 +48,26 @@ model.add(Dense(num_classes, activation='softmax'))
 model.compile(loss='categorical_crossentropy',
               optimizer=RMSprop(),
               metrics=['accuracy'])
+
+tensorboard = TensorBoard(log_dir='/LW_6/logs_1', histogram_freq=0,
+                          write_graph=True, write_images=False)
+
+# запись данные изображений в файлы событий
+images = x_train[:20].reshape(-1, 28, 28, 1)
+images = (images * 255).astype(np.uint8)
+writer.add_images('mnist_images', images, dataformats='NHWC')
+writer.close()
+
 # обучение модели на тренировочных данных
 history = model.fit(x_train, y_train,
                     batch_size=128, # размер пакета
-                    epochs=20, # количество эпох
+                    epochs=15, # количество эпох
                     verbose=1, # вывод информации о потерях, метриках и прогресс-бар
-                    validation_data=(x_test, y_test)) # тестовые данные будут использоваться для проверки производительности модели во время обучения
+                    validation_data=(x_test, y_test), # тестовые данные будут использоваться для проверки производительности модели во время обучения
+                    callbacks=[tensorboard])
+
+# сохранение модели
+model.save("multilayer_perceptron.keras")
 
 print('==============================================================')
 # оценка потерь и точности модели
@@ -62,6 +81,7 @@ percent_correct = accuracy * 100
 print('Процент корректной работы:', percent_correct)
 
 # подсчёт затраченного времени
+# замер конца времени работы
 end_time = time.time()
 print('Затраченное время:', end_time - start_time)
 print('==============================================================')
