@@ -58,7 +58,7 @@ history = model.fit(train_images, train_labels,
                     callbacks=[tensorboard_callback])
 
 # сохранение модели
-model.save("cnn_model.keras")
+model.save("./models/cnn_model.keras")
 
 print('==============================================================')
 # оценка потерь и точности модели

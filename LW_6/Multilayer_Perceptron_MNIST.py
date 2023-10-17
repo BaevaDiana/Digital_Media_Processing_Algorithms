@@ -68,7 +68,7 @@ history = model.fit(x_train, y_train,
                     callbacks=[tensorboard])
 
 # сохранение модели
-model.save("multilayer_perceptron.keras")
+model.save("./models/multilayer_perceptron.keras")
 
 print('==============================================================')
 # оценка потерь и точности модели
