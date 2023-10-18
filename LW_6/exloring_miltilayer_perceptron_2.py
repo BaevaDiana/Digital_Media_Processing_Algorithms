@@ -2,9 +2,13 @@ import tensorflow as tf
 from keras.models import load_model
 from keras.datasets import mnist
 from keras.utils import to_categorical
+import time
 
 # загрузка модели получившегося ранее персептрона
 model = load_model("./models/multilayer_perceptron.keras")
+
+# замер начала времени работы
+start_time = time.time()
 
 # задание параметров для сравнения
 epochs_list = [1, 2, 3]  # эпохи
@@ -52,6 +56,12 @@ for epochs in epochs_list:
             # добавление параметров в список accuracies
             accuracies.append((epochs, lr, num_layers, test_accuracy))
 
+print('=================================================================================================================')
 # вывод результатов
 for epochs, lr, num_layers, accuracy in accuracies:
     print(f'Эпохи: {epochs}, Скорость обучения: {lr}, Количество слоев: {num_layers}, Точность на тесте: {accuracy}')
+
+# подсчёт затраченного времени
+end_time = time.time()
+print('Затраченное время:', end_time - start_time)
+print('=================================================================================================================')

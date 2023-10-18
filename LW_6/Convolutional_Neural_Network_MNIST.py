@@ -10,11 +10,9 @@ writer = SummaryWriter(log_dir='/LW_6/logs_2')
 
 # загрузка данных MNIST (первый кортеж - тренировочные изображения и метки, а второй - тестовые изображения и метки)
 (train_images, train_labels), (test_images, test_labels) = datasets.mnist.load_data()
-
 # нормализация данных
 train_images = train_images / 255.0
 test_images = test_images / 255.0
-
 # изменение форму массивов из двумерных в четырехмерные, добавляя размерность канала
 train_images = train_images.reshape(train_images.shape[0], 28, 28, 1)
 test_images = test_images.reshape(test_images.shape[0], 28, 28, 1)
@@ -32,8 +30,9 @@ model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 # добавление слоя “выравнивания” - т.е. преобразование многомерный тензор в одномерный тензор, что позволяет передавать данные в полносвязные слои
 model.add(layers.Flatten())
-# добавление выходного слоя
+# добавление выходного слоя - первый полносвязный слой
 model.add(layers.Dense(64, activation='relu'))
+# второй полносвязный слой
 model.add(layers.Dense(10))
 
 # компиляция модели и обучение ее на тренировочных данных
@@ -53,9 +52,9 @@ writer.close()
 
 # обучение модели на тренировочных данных
 history = model.fit(train_images, train_labels,
-                    epochs=5,
-                    validation_data=(test_images, test_labels),
-                    callbacks=[tensorboard_callback])
+                    epochs=10, # количество эпох
+                    validation_data=(test_images, test_labels), # тестовые данные будут использоваться для проверки производительности модели во время обучения
+                    callbacks=[tensorboard_callback]) # обратный вызов - работа с TensorBoard
 
 # сохранение модели
 model.save("./models/cnn_model.keras")

@@ -10,7 +10,7 @@ start_time = time.time()
 model = load_model("./models/multilayer_perceptron.keras")
 
 # загрузка тестируемого изображение в оттенках серого
-image_path ="./input_picture/example_number_2.jpg"
+image_path = "input_picture/example_number_2.jpg"
 img_cv = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
 # изменение размера изображения на 28x28 (аналогично размеру MNIST изображений)
@@ -35,3 +35,6 @@ print(f"Предсказанная цифра: {predicted_class}")
 end_time = time.time()
 print('Затраченное время:', end_time - start_time)
 
+'''Функция predict использует модель, чтобы сделать предсказание для входного изображения. 
+В данном случае мы загружаем модель, которая была обучена на датасете MNIST, и передаем ей одномерный вектор, который представляет собой изображение цифры. 
+Модель возвращает вероятности для каждого класса цифр (0-9), а затем мы выбираем класс с наибольшей вероятностью как предсказанный класс.'''

@@ -65,7 +65,7 @@ history = model.fit(x_train, y_train,
                     epochs=15, # количество эпох
                     verbose=1, # вывод информации о потерях, метриках и прогресс-бар
                     validation_data=(x_test, y_test), # тестовые данные будут использоваться для проверки производительности модели во время обучения
-                    callbacks=[tensorboard])
+                    callbacks=[tensorboard]) # обратный вызов - работа с TensorBoard
 
 # сохранение модели
 model.save("./models/multilayer_perceptron.keras")
