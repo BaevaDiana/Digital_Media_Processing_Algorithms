@@ -6,9 +6,8 @@ import os
 class ImageRecognizer:
     def __init__(self):
         self.tesseract_config = r'--oem 3 --psm 6'  # конфигурация для TesseractOCR
-        self.reader = easyocr.Reader(['en', 'ru'])  # конфигурация для EasyOCR с поддержкой английского и русского
+        self.reader = easyocr.Reader(['en', 'ru'])  # конфигурация для EasyOCR
 
-    #Tesseract, запись результатов в файл аннотаций.
     def annotate_images(self, image_paths, annotation_file):
         # создание пустого словаря для результатов
         annotations = {}
@@ -75,6 +74,54 @@ class ImageRecognizer:
 
         return predictions
 
+    # вызов распознавание для изображения стандартным методом to_string, а далее - постобработка ответа
+    def response_post_processing(self, image_paths):
+        # создание пустого словаря predictions - это словарь, содержащий пути к изображениям в качестве ключей и текст, распознанный на каждом изображении, в качестве значений
+        predictions = {}
+        # проход по списку путей к изображениям
+        for image_path in image_paths:
+            # открытие изображения
+            img = Image.open(image_path)
+            # распознавание текста
+            text = pytesseract.image_to_string(img, config=self.tesseract_config)
+            # удаление спецсимволов и приведение к нижнему регистру
+            text = ''.join(e for e in text if e.isalnum()).lower()
+            # сохранение результата в словарь
+            predictions[image_path] = text.strip()
+
+        return predictions
+
+    def test_recognition_2(self, image_paths, ground_truth_file, responce_file_path):
+
+        # вызов метода распознавания
+        predictions = self.response_post_processing(image_paths)
+
+        # загрузка файла с правильными ответами для каждого изображения
+        # создание пустого словаря ground_truth - это словарь, содержащий пути к изображениям в качестве ключей и соответствующий текст, который должен быть распознан на каждом изображении, в качестве значений
+        # Load ground truth from the annotation file
+        ground_truth = {}
+        with open(ground_truth_file, 'r', encoding='utf-8') as file:
+            for line in file:
+                parts = line.split(':')
+                if len(parts) >= 2:
+                    # сохранение в словарь правильных ответов
+                    image_path = parts[0].strip()
+                    true_text = parts[1].strip()
+                    ground_truth[image_path] = true_text
+                # else:
+                #     # обработка случая, когда в строке нет символа ':' или после ':' нет текста
+                #     print(f"Неправильный формат строки: {line}")
+
+        accuracy = self.evaluate_accuracy(ground_truth, predictions)
+
+        # запись распознанных слов в файл в кодировке UTF-8
+        with open(responce_file_path, 'w', encoding='utf-8') as file:
+            for image_path, annotation in predictions.items():
+                file.write(f"{image_path}: {annotation}\n")
+
+        return accuracy
+
+
     def test_recognition(self, rec_type, val_type, image_paths, ground_truth_file):
         # выбор метода распознавания
         if rec_type == 'straight':
@@ -139,7 +186,7 @@ class ImageRecognizer:
 
             return accuracy
 
-    # оценка качества распознавания - попарное сравнениеО
+    # оценка качества распознавания - попарное сравнение
     def compare_predictions_wordwise(self, ground_truth_file, straight_predictions_file, easyocr_predictions_file):
         # загрузка файла с правильными ответами для каждого изображения
         ground_truth = {}
@@ -203,28 +250,24 @@ recognizer = ImageRecognizer()
 # пути к датасетам
 original_dataset_path = 'dataset_1'
 augmented_dataset_path = 'dataset2'
-#  путь к файлу с правильными ответами для каждого изображения
-ground_truth_file = 'true_words_2.txt'
-
-recognition_type = 'straight'  #straight   easyocr
-validation_type = 'full_match'
+# путь к файлу с правильными ответами для каждого изображения
+ground_truth_file = 'true_words_2.txt' # true_words_2.txt
+straight_predictions_file = 'straight_predictions_2.txt' #straight_predictions_2.txt
+easyocr_predictions_file = 'easyocr_predictions_2.txt' # easyocr_predictions_2.txt
+responce_file_path = 'recognition_after_post_processing.txt'
 
 # аугментация датасета
 recognizer.augment_dataset(original_dataset_path, augmented_dataset_path)
 
-# распознавание на аугментированном датасете
-accuracy_augmented = recognizer.test_augmented_dataset(recognition_type, validation_type, augmented_dataset_path, ground_truth_file)
-print('Оценка точности методом полного совпадения:')
-print(f"Accuracy for {recognition_type} recognition on augmented dataset: {accuracy_augmented * 100:.2f}%")
+path_images = ([os.path.join(augmented_dataset_path, f) for f in os.listdir(augmented_dataset_path)])
 
-# пути с файлами с распознаными словами
-straight_predictions_file = 'straight_predictions_2.txt'
-easyocr_predictions_file = 'easyocr_predictions_2.txt'
+recognise_after_post_processing = recognizer.test_recognition_2(path_images, straight_predictions_file, responce_file_path)
+print('Оценка точности методом полного совпадения:')
+print(f"Точность распознавания: {recognise_after_post_processing * 100:.2f}%")
 
 # сравнение по словам
 straight_accuracy_wordwise, easyocr_accuracy_wordwise = recognizer.compare_predictions_wordwise(
-    ground_truth_file, straight_predictions_file, easyocr_predictions_file
-)
+    ground_truth_file, straight_predictions_file, responce_file_path)
 print("Оценка точности методом попарного сравнения слов:")
 print(f"Straight Recognition Wordwise Accuracy: {straight_accuracy_wordwise * 100:.2f}%")
 print(f"EasyOCR Recognition Wordwise Accuracy: {easyocr_accuracy_wordwise * 100:.2f}%")
