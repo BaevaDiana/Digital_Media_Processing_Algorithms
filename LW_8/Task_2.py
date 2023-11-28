@@ -6,7 +6,7 @@ import time
 cap = cv2.VideoCapture(0)
 cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
 
-# загрузка модели YOLOv3-tiny для обнаружения лиц
+# загрузка модели YOLOv3 для обнаружения лиц
 net = cv2.dnn.readNetFromDarknet('resources_for_yolo/yolov3-face.cfg','resources_for_yolo/yolov3-wider_16000.weights')
 
 # задание кодека и создание объекта VideoWriter для записи видео в файл
@@ -18,6 +18,8 @@ frame_count = 0
 prev_frame_time = 0
 
 start_time = time.time()
+
+# чтение видеофайла кадр за кадром
 while True:
     # чтение кадра из видеопотока
     ret, frame = cap.read()
@@ -74,7 +76,6 @@ if cap.get(cv2.CAP_PROP_FRAME_COUNT) != 0:
     print(f"Скорость обработки: {cap.get(cv2.CAP_PROP_FPS):.0f} кадр(-a)(-ов)/секунду")
 else:
     print("Видеофайл не содержит кадров.")
-
 
 # освобождение ресурсов
 cap.release()

@@ -17,6 +17,7 @@ frame_count = 0
 prev_frame_time = 0
 
 start_time = time.time()
+
 # чтение видеофайла кадр за кадром
 while True:
     # чтение кадра из видеопотока
