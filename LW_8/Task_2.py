@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import time
 
 # запуск видеопотока с камеры
 cap = cv2.VideoCapture(0)
@@ -12,9 +13,21 @@ net = cv2.dnn.readNetFromDarknet('resources_for_yolo/yolov3-face.cfg','resources
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 res = cv2.VideoWriter('video_results/yolo_output_1.avi', fourcc, 20.0, (640, 480))
 
+# задание переменных для подсчета частоты потери изображения
+frame_count = 0
+prev_frame_time = 0
+
+start_time = time.time()
 while True:
     # чтение кадра из видеопотока
     ret, frame = cap.read()
+
+    # подсчет количества кадров
+    frame_count += 1
+
+    # подсчет времени обработки кадра
+    current_time = time.time()
+    time_diff = current_time - prev_frame_time
 
     # получение списка обнаруженных лиц
     blob = cv2.dnn.blobFromImage(frame, 1 / 255, (415, 415), [0, 0, 0], True, crop=False)
@@ -33,11 +46,18 @@ while True:
                 width = int(detection[2] * frame.shape[1])
                 height = int(detection[3] * frame.shape[0])
                 left = int(center_x - width / 2)
-                top = int(center_y - height / 2)
+                top = int( center_y - height / 2)
                 cv2.rectangle(frame, (left, top), (left + width, top + height), (0, 255, 0), 2)
 
     # запись кадра в выходной файл
     res.write(frame)
+
+    # подсчет частоты потери изображения
+    if time_diff > 1:
+        fps = frame_count / time_diff
+        print(f"Частота потери изображения: {1 / ((current_time - prev_frame_time) / frame_count):.0f} кадр(-a)(-ов)/секунду")
+        prev_frame_time = current_time
+        frame_count = 0
 
     # отображение кадра с обнаруженными лицами
     cv2.imshow('Video', frame)
@@ -45,6 +65,16 @@ while True:
     # выход при нажатии клавиши 'esc'
     if cv2.waitKey(1) & 0xFF == 27:
         break
+
+end_time = time.time()
+
+# вывод сравнительных характеристик
+if cap.get(cv2.CAP_PROP_FRAME_COUNT) != 0:
+    print(f"Время работы метода: {end_time - start_time:.5f} секунд")
+    print(f"Скорость обработки: {cap.get(cv2.CAP_PROP_FPS):.0f} кадр(-a)(-ов)/секунду")
+else:
+    print("Видеофайл не содержит кадров.")
+
 
 # освобождение ресурсов
 cap.release()

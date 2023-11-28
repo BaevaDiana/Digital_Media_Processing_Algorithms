@@ -1,4 +1,5 @@
 import cv2
+import time
 
 # запуск видеопотока с камеры
 cap = cv2.VideoCapture(0)
@@ -9,14 +10,27 @@ face_cascade = cv2.CascadeClassifier('sources_for_haarscade/haarcascade_frontalf
 
 # задание кодека и создание объекта VideoWriter для записи видео в файл
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('result_videos/haarscade_output_1.avi', fourcc, 20.0, (640, 480))
+out = cv2.VideoWriter('video_results/haarscade_output_1.avi', fourcc, 20.0, (640, 480))
 
+# задание переменных для подсчета частоты потери изображения
+frame_count = 0
+prev_frame_time = 0
+
+start_time = time.time()
 # чтение видеофайла кадр за кадром
 while True:
     # чтение кадра из видеопотока
     ret, frame = cap.read()
 
     if ret:
+
+        # подсчет количества кадров
+        frame_count += 1
+
+        # подсчет времени обработки кадра
+        current_time = time.time()
+        time_diff = current_time - prev_frame_time
+
         # преобразование кадра в оттенки серого
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -30,12 +44,29 @@ while True:
         # запись кадра в выходной файл
         out.write(frame)
 
+        # подсчет частоты потери изображения
+        if time_diff > 1:
+            fps = frame_count / time_diff
+            print(
+                f"Частота потери изображения: {1 / ((current_time - prev_frame_time) / frame_count):.0f} кадр(-a)(-ов)/секунду")
+            prev_frame_time = current_time
+            frame_count = 0
+
         # отображение кадра с обнаруженными лицами
         cv2.imshow('Video', frame)
 
         # выход при нажатии клавиши 'esc'
         if cv2.waitKey(1) & 0xFF == 27:
             break
+
+end_time = time.time()
+
+# вывод сравнительных характеристик
+if cap.get(cv2.CAP_PROP_FRAME_COUNT) != 0:
+    print(f"Время работы метода: {end_time - start_time:.5f} секунд")
+    print(f"Скорость обработки: {cap.get(cv2.CAP_PROP_FPS):.0f} кадр(-a)(-ов)/секунду")
+else:
+    print("Видеофайл не содержит кадров.")
 
 # освобождение ресурсов
 cap.release()
