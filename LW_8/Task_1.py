@@ -5,11 +5,11 @@ cap = cv2.VideoCapture(0)
 cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
 
 # загрузка каскада Хаара для обнаружения лиц
-face_cascade = cv2.CascadeClassifier('src/haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('sources_for_haarscade/haarcascade_frontalface_default.xml')
 
 # задание кодека и создание объекта VideoWriter для записи видео в файл
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('result_videos/output_1.avi', fourcc, 20.0, (640, 480))
+out = cv2.VideoWriter('result_videos/haarscade_output_1.avi', fourcc, 20.0, (640, 480))
 
 # чтение видеофайла кадр за кадром
 while True:
